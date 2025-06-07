@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text.RegularExpressions;
 using Unity.Mathematics;
 using UnityEngine;
-
+using static Unity.Mathematics.math;
 using Random = UnityEngine.Random;
 
 public class Match3Game : MonoBehaviour
 {
+    public List<int2> ClearedTileCoordinates
+    { get; private set; }
+    public List<TileDrop> DroppedTiles
+    { get; private set; }
+    public bool NeedsFilling
+    { get; private set; }
+
     [SerializeField]
     private int2 _size = 8;
     public int2 Size => _size;
@@ -28,6 +34,8 @@ public class Match3Game : MonoBehaviour
         {
             _grid = new(_size);
             _matches = new();
+            ClearedTileCoordinates = new();
+            DroppedTiles = new();
         }
         FillGrid();
     }
@@ -41,6 +49,60 @@ public class Match3Game : MonoBehaviour
         }
         _grid.Swap(move.From, move.To);
         return false;
+    }
+
+    public void ProcessMatches()
+    {
+        ClearedTileCoordinates.Clear();
+
+        for (int m = 0; m < _matches.Count; m++)
+        {
+            Match match = _matches[m];
+            int2 step = match.isHorizontal ? int2(1, 0) : int2(0, 1);
+            int2 c = match.coordinates;
+            for (int i = 0; i < match.length; c += step, i++)
+            {
+                if (_grid[c] != TileState.None)
+                {
+                    _grid[c] = TileState.None;
+                    ClearedTileCoordinates.Add(c);
+                }
+            }
+        }
+
+        _matches.Clear();
+        NeedsFilling = true;
+    }
+
+    public void DropTiles()
+    {
+        DroppedTiles.Clear();
+
+        for (int x = 0; x < _size.x; x++)
+        {
+            int holeCount = 0;
+            for (int y = 0; y < _size.y; y++)
+            {
+                if (_grid[x, y] == TileState.None)
+                {
+                    holeCount += 1;
+                }
+                else if (holeCount > 0)
+                {
+                    _grid[x, y - holeCount] = _grid[x, y];
+                    DroppedTiles.Add(new TileDrop(x, y - holeCount, holeCount));
+                }
+            }
+
+            for (int h = 1; h <= holeCount; h++)
+            {
+                _grid[x, _size.y - h] = (TileState)Random.Range(1, 8);
+                DroppedTiles.Add(new TileDrop(x, _size.y - h, holeCount));
+            }
+        }
+
+        NeedsFilling = false;
+        FindMatches();
     }
 
     private void FillGrid()

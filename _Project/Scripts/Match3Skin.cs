@@ -49,7 +49,17 @@ public class Match3Skin : MonoBehaviour
     }
 
 
-    public void DoWork() { }
+    public void DoWork() 
+    {
+        if (_game.HasMatches)
+        {
+            ProcessMatches();
+        }
+        else if (_game.NeedsFilling)
+        {
+            DropTiles();
+        }
+    }
 
     public bool EvaluateDrag(Vector3 start, Vector3 end)
     {
@@ -98,5 +108,42 @@ public class Match3Skin : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(screenPosition);
         Vector3 p = ray.origin - ray.direction * (ray.origin.z / ray.direction.z);
         return float2(p.x - _tileOffset.x + 0.5f, p.y - _tileOffset.y + 0.5f);
+    }
+
+    private void ProcessMatches()
+    {
+        _game.ProcessMatches();
+
+        for (int i = 0; i < _game.ClearedTileCoordinates.Count; i++)
+        {
+            int2 c = _game.ClearedTileCoordinates[i];
+            _tiles[c].Despawn();
+            _tiles[c] = null;
+        }
+    }
+
+    private void DropTiles()
+    {
+        _game.DropTiles();
+
+        for (int i = 0; i < _game.DroppedTiles.Count; i++)
+        {
+            TileDrop drop = _game.DroppedTiles[i];
+            Tile tile;
+            if (drop.fromY < _tiles.SizeY)
+            {
+                tile = _tiles[drop.coordinates.x, drop.fromY];
+                tile.transform.localPosition = new Vector3(
+                    drop.coordinates.x + _tileOffset.x, drop.coordinates.y + _tileOffset.y
+                );
+            }
+            else
+            {
+                tile = SpawnTile(
+                    _game[drop.coordinates], drop.coordinates.x, drop.coordinates.y
+                );
+            }
+            _tiles[drop.coordinates] = tile;
+        }
     }
 }
