@@ -8,6 +8,8 @@ public class Match3Game : MonoBehaviour
 {
     [SerializeField]
     private int2 _size = 8;
+    [SerializeField, Range(4, 8)]
+    private int _tileTypeCount = 5;
 
     private Grid2D<TileState> _grid;
 
@@ -24,6 +26,12 @@ public class Match3Game : MonoBehaviour
             _grid = new(_size);
         }
         FillGrid();
+    }
+
+    public bool TryMove(Move move)
+    {
+        _grid.Swap(move.From, move.To);
+        return true;
     }
 
     private void FillGrid()
@@ -58,7 +66,7 @@ public class Match3Game : MonoBehaviour
                         }
                     }
                 }
-                TileState t = (TileState)Random.Range(1, 8 - potentialMatchCount);
+                TileState t = (TileState)Random.Range(1, _tileTypeCount + 1 - potentialMatchCount);
                 if (potentialMatchCount > 0 && t >= a)
                 {
                     t += 1;

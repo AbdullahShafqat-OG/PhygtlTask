@@ -1,6 +1,8 @@
 using Unity.Mathematics;
 using UnityEngine;
 
+using static Unity.Mathematics.math;
+
 public class Match3Skin : MonoBehaviour
 {
     public bool IsPlaying => true;
@@ -11,6 +13,8 @@ public class Match3Skin : MonoBehaviour
     private Tile[] _tilePrefabs;
     [SerializeField]
     private Match3Game _game;
+    [SerializeField, Range(0.1f, 1f)]
+    private float _dragThreshold = 0.5f;
 
     private Grid2D<Tile> _tiles;
     private float2 _tileOffset;
@@ -44,13 +48,55 @@ public class Match3Skin : MonoBehaviour
         }
     }
 
-    Tile SpawnTile(TileState t, float x, float y) =>
-        _tilePrefabs[(int)t - 1].Spawn(new Vector3(x + _tileOffset.x, y + _tileOffset.y));
 
     public void DoWork() { }
 
     public bool EvaluateDrag(Vector3 start, Vector3 end)
     {
-        return false;
+        float2 a = ScreenToTileSpace(start), b = ScreenToTileSpace(end);
+        var move = new Move(
+            (int2)floor(a), (b - a) switch
+            {
+                var d when d.x > _dragThreshold => MoveDirection.Right,
+                var d when d.x < -_dragThreshold => MoveDirection.Left,
+                var d when d.y > _dragThreshold => MoveDirection.Up,
+                var d when d.y < -_dragThreshold => MoveDirection.Down,
+                _ => MoveDirection.None
+            }
+        );
+        if (
+            move.IsValid &&
+            _tiles.AreValidCoordinates(move.From) && _tiles.AreValidCoordinates(move.To)
+            )
+        {
+            DoMove(move);
+            return false;
+        }
+        return true;
+    }
+
+    private Tile SpawnTile(TileState t, float x, float y) =>
+        _tilePrefabs[(int)t - 1].Spawn(new Vector3(x + _tileOffset.x, y + _tileOffset.y));
+
+    private void DoMove(Move move)
+    {
+        if (_game.TryMove(move))
+        {
+            (
+                _tiles[move.From].transform.localPosition,
+                _tiles[move.To].transform.localPosition
+            ) = (
+                _tiles[move.To].transform.localPosition,
+                _tiles[move.From].transform.localPosition
+            );
+            _tiles.Swap(move.From, move.To);
+        }
+    }
+
+    private float2 ScreenToTileSpace(Vector3 screenPosition)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+        Vector3 p = ray.origin - ray.direction * (ray.origin.z / ray.direction.z);
+        return float2(p.x - _tileOffset.x + 0.5f, p.y - _tileOffset.y + 0.5f);
     }
 }
