@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -8,22 +10,24 @@ public class Match3Game : MonoBehaviour
 {
     [SerializeField]
     private int2 _size = 8;
+    public int2 Size => _size;
     [SerializeField, Range(4, 8)]
     private int _tileTypeCount = 5;
 
     private Grid2D<TileState> _grid;
+    private List<Match> _matches;
+    public bool HasMatches => _matches.Count > 0;
 
     public TileState this[int x, int y] => _grid[x, y];
-
     public TileState this[int2 c] => _grid[c];
 
-    public int2 Size => _size;
 
     public void StartNewGame()
     {
         if (_grid.IsUndefined)
         {
             _grid = new(_size);
+            _matches = new();
         }
         FillGrid();
     }
@@ -31,7 +35,12 @@ public class Match3Game : MonoBehaviour
     public bool TryMove(Move move)
     {
         _grid.Swap(move.From, move.To);
-        return true;
+        if (FindMatches())
+        {
+            return true;
+        }
+        _grid.Swap(move.From, move.To);
+        return false;
     }
 
     private void FillGrid()
@@ -78,5 +87,66 @@ public class Match3Game : MonoBehaviour
                 _grid[x, y] = t;
             }
         }
+    }
+
+    private bool FindMatches()
+    {
+        // searching for horizontal _matches 
+        for (int y = 0; y < _size.y; y++)
+        {
+            TileState start = _grid[0, y];
+            int length = 1;
+            for (int x = 1; x < _size.x; x++)
+            {
+                TileState t = _grid[x, y];
+                if (t == start)
+                {
+                    length += 1;
+                }
+                else
+                {
+                    if (length >= 3)
+                    {
+                        _matches.Add(new Match(x - length, y, length, true));
+                    }
+                    start = t;
+                    length = 1;
+                }
+            }
+            if (length >= 3)
+            {
+                _matches.Add(new Match(_size.x - length, y, length, true));
+            }
+        }
+
+        // searching for vertical _matches
+        for (int x = 0; x < _size.x; x++)
+        {
+            TileState start = _grid[x, 0];
+            int length = 1;
+            for (int y = 1; y < _size.y; y++)
+            {
+                TileState t = _grid[x, y];
+                if (t == start)
+                {
+                    length += 1;
+                }
+                else
+                {
+                    if (length >= 3)
+                    {
+                        _matches.Add(new Match(x, y - length, length, false));
+                    }
+                    start = t;
+                    length = 1;
+                }
+            }
+            if (length >= 3)
+            {
+                _matches.Add(new Match(x, _size.y - length, length, false));
+            }
+        }
+
+        return HasMatches;
     }
 }
