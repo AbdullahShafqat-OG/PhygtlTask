@@ -26,13 +26,48 @@ public class Match3Game : MonoBehaviour
         FillGrid();
     }
 
-    void FillGrid()
+    private void FillGrid()
     {
         for (int y = 0; y < _size.y; y++)
         {
             for (int x = 0; x < _size.x; x++)
             {
-                _grid[x, y] = (TileState)Random.Range(1, 8);
+                TileState a = TileState.None, b = TileState.None;
+                int potentialMatchCount = 0;
+                if (x > 1)
+                {
+                    a = _grid[x - 1, y];
+                    if (a == _grid[x - 2, y])
+                    {
+                        potentialMatchCount = 1;
+                    }
+                }
+                if (y > 1)
+                {
+                    b = _grid[x, y - 1];
+                    if (b == _grid[x, y - 2])
+                    {
+                        potentialMatchCount += 1;
+                        if (potentialMatchCount == 1)
+                        {
+                            a = b;
+                        }
+                        else if (b < a)
+                        {
+                            (a, b) = (b, a);
+                        }
+                    }
+                }
+                TileState t = (TileState)Random.Range(1, 8 - potentialMatchCount);
+                if (potentialMatchCount > 0 && t >= a)
+                {
+                    t += 1;
+                }
+                if (potentialMatchCount == 2 && t >= b)
+                {
+                    t += 1;
+                }
+                _grid[x, y] = t;
             }
         }
     }

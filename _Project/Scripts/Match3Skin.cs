@@ -9,45 +9,43 @@ public class Match3Skin : MonoBehaviour
 
     [SerializeField]
     private Tile[] _tilePrefabs;
-
     [SerializeField]
-    Match3Game game;
+    private Match3Game _game;
 
-    Grid2D<Tile> tiles;
-
-    float2 tileOffset;
+    private Grid2D<Tile> _tiles;
+    private float2 _tileOffset;
 
     public void StartNewGame() 
     {
-        game.StartNewGame();
-        tileOffset = -0.5f * (float2)(game.Size - 1);
-        if (tiles.IsUndefined)
+        _game.StartNewGame();
+        _tileOffset = -0.5f * (float2)(_game.Size - 1);
+        if (_tiles.IsUndefined)
         {
-            tiles = new(game.Size);
+            _tiles = new(_game.Size);
         }
         else
         {
-            for (int y = 0; y < tiles.SizeY; y++)
+            for (int y = 0; y < _tiles.SizeY; y++)
             {
-                for (int x = 0; x < tiles.SizeX; x++)
+                for (int x = 0; x < _tiles.SizeX; x++)
                 {
-                    tiles[x, y].Despawn();
-                    tiles[x, y] = null;
+                    _tiles[x, y].Despawn();
+                    _tiles[x, y] = null;
                 }
             }
         }
 
-        for (int y = 0; y < tiles.SizeY; y++)
+        for (int y = 0; y < _tiles.SizeY; y++)
         {
-            for (int x = 0; x < tiles.SizeX; x++)
+            for (int x = 0; x < _tiles.SizeX; x++)
             {
-                tiles[x, y] = SpawnTile(game[x, y], x, y);
+                _tiles[x, y] = SpawnTile(_game[x, y], x, y);
             }
         }
     }
 
     Tile SpawnTile(TileState t, float x, float y) =>
-        _tilePrefabs[(int)t - 1].Spawn(new Vector3(x + tileOffset.x, y + tileOffset.y));
+        _tilePrefabs[(int)t - 1].Spawn(new Vector3(x + _tileOffset.x, y + _tileOffset.y));
 
     public void DoWork() { }
 

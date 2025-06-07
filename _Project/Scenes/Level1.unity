@@ -2302,7 +2302,7 @@ MonoBehaviour:
   - {fileID: 5063772520427731264, guid: 364c19a8a257b6c4fbfe010d5ba7b334, type: 3}
   - {fileID: 3233572664672493616, guid: 2dab0068426cbe34086a0bec6db70c2f, type: 3}
   - {fileID: 1629527246034119968, guid: c9b9464769683fd4fa3a2ccb73660d0d, type: 3}
-  game: {fileID: 1370462690}
+  _game: {fileID: 1370462690}
 --- !u!4 &1370462689
 Transform:
   m_ObjectHideFlags: 0
