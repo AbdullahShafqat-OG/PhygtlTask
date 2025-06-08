@@ -5,8 +5,6 @@ using static Unity.Mathematics.math;
 
 public class Match3Skin : MonoBehaviour
 {
-    public bool IsPlaying => true;
-
     [SerializeField]
     private Tile[] _tilePrefabs;
     [SerializeField]
@@ -30,6 +28,7 @@ public class Match3Skin : MonoBehaviour
     private float2 _tileOffset;
     private float _busyDuration;
     public bool IsBusy => _busyDuration > 0f;
+    public bool IsPlaying => IsBusy || _game.PossibleMove.IsValid;
 
     public void StartNewGame() 
     {
@@ -80,6 +79,10 @@ public class Match3Skin : MonoBehaviour
         else if (_game.NeedsFilling)
         {
             DropTiles();
+        }
+        else if (!IsPlaying)
+        {
+            Messenger.Broadcast(GameEvent.GAME_OVER);
         }
     }
 

@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleInput() 
     {
-        if (!_isDragging && Input.GetMouseButtonDown(0))
+        if(!_isDragging && Input.GetMouseButtonDown(0))
         {
             _dragStart = Input.mousePosition;
             _isDragging = true;

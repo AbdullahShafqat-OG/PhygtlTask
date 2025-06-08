@@ -17,6 +17,8 @@ public class Match3Game : MonoBehaviour
     { get; private set; }
     public int TotalScore
     { get; private set; }
+    public Move PossibleMove
+    { get; private set; }
 
     [SerializeField]
     private int2 _size = 8;
@@ -45,6 +47,7 @@ public class Match3Game : MonoBehaviour
             Scores = new();
         }
         FillGrid();
+        PossibleMove = Move.FindMove(this);
     }
 
     public bool TryMove(Move move)
@@ -119,7 +122,10 @@ public class Match3Game : MonoBehaviour
         }
 
         NeedsFilling = false;
-        FindMatches();
+        if (!FindMatches())
+        {
+            PossibleMove = Move.FindMove(this);
+        }
     }
 
     private void FillGrid()
