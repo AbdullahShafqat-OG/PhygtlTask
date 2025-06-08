@@ -30,9 +30,9 @@ public class Match3Skin : MonoBehaviour
     public bool IsBusy => _busyDuration > 0f;
     public bool IsPlaying => IsBusy || _game.PossibleMove.IsValid;
 
-    public void StartNewGame() 
+    public void StartNewGame(int2 size, int tileTypeCount, int targetScore) 
     {
-        _game.StartNewGame();
+        _game.StartNewGame(size, tileTypeCount, targetScore);
         _tileOffset = -0.5f * (float2)(_game.Size - 1);
         if (_tiles.IsUndefined)
         {

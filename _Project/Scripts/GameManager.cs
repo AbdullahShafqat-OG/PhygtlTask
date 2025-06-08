@@ -6,11 +6,13 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private Match3Skin _match3;
+    [SerializeField]
+    private LevelData _currentLevelData;
 
     private Vector3 _dragStart;
     private bool _isDragging;
 
-    private void Awake() => _match3.StartNewGame();
+    private void Awake() => _match3.StartNewGame(_currentLevelData.Size, _currentLevelData.TileTypeCount, _currentLevelData.TargetScore);
 
     private void Update()
     {
@@ -24,7 +26,7 @@ public class GameManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            _match3.StartNewGame();
+            _match3.StartNewGame(_currentLevelData.Size, _currentLevelData.TileTypeCount, _currentLevelData.TargetScore);
         }
     }
 

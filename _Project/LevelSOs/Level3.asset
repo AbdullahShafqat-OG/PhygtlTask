@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e2ac8d065729fa40ab899b512203953, type: 3}
-  m_Name: Level1
+  m_Name: Level3
   m_EditorClassIdentifier: 
-  LevelName: Level1
+  LevelName: Level3
   Size:
     x: 7
-    y: 7
-  TileTypeCount: 4
-  TargetScore: 100
+    y: 12
+  TileTypeCount: 8
+  TargetScore: 250

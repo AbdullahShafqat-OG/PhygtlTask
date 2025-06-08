@@ -551,6 +551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _match3: {fileID: 1370462688}
+  _currentLevelData: {fileID: 11400000, guid: e739aa15695a07748bb09a889e3691b5, type: 2}
 --- !u!4 &962970692
 Transform:
   m_ObjectHideFlags: 0
@@ -764,7 +765,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7fe91dba56963c499a53fd31507d857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetScore: 30
   _size:
     x: 7
     y: 7

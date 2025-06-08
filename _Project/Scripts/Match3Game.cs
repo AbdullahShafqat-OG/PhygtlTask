@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class Match3Game : MonoBehaviour
 {
-    public int TargetScore = 100;
+    private int _targetScore = 100;
 
     public List<int2> ClearedTileCoordinates
     { get; private set; }
@@ -37,8 +37,12 @@ public class Match3Game : MonoBehaviour
 
     private int _scoreMultiplier;
 
-    public void StartNewGame()
+    public void StartNewGame(int2 size, int tileTypeCount, int targetScore)
     {
+        _size = size;
+        _tileTypeCount = tileTypeCount;
+        _targetScore = targetScore;
+
         TotalScore = 0;
         if (_grid.IsUndefined)
         {
@@ -90,7 +94,7 @@ public class Match3Game : MonoBehaviour
             Scores.Add(score);
             TotalScore += score.value;
             Messenger<int>.Broadcast(GameEvent.SCORE_UPDATED, TotalScore);
-            if (TotalScore > TargetScore)
+            if (TotalScore > _targetScore)
                 Messenger<int>.Broadcast(GameEvent.LEVEL_COMPLETE, TotalScore);
         }
 
