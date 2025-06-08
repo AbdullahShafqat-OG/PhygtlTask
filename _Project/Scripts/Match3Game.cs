@@ -13,6 +13,8 @@ public class Match3Game : MonoBehaviour
     { get; private set; }
     public bool NeedsFilling
     { get; private set; }
+    public int TotalScore
+    { get; private set; }
 
     [SerializeField]
     private int2 _size = 8;
@@ -30,6 +32,7 @@ public class Match3Game : MonoBehaviour
 
     public void StartNewGame()
     {
+        TotalScore = 0;
         if (_grid.IsUndefined)
         {
             _grid = new(_size);
@@ -68,6 +71,8 @@ public class Match3Game : MonoBehaviour
                     ClearedTileCoordinates.Add(c);
                 }
             }
+            TotalScore += match.length;
+            Messenger<int>.Broadcast(GameEvent.SCORE_UPDATED, TotalScore);
         }
 
         _matches.Clear();
