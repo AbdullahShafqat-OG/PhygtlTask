@@ -126,7 +126,7 @@ public class Match3Skin : MonoBehaviour
         for (int i = 0; i < _game.ClearedTileCoordinates.Count; i++)
         {
             int2 c = _game.ClearedTileCoordinates[i];
-            _tiles[c].Despawn();
+            _busyDuration = Mathf.Max(_tiles[c].Disappear(), _busyDuration);
             _tiles[c] = null;
         }
     }
