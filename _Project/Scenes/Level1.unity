@@ -2303,6 +2303,9 @@ MonoBehaviour:
   - {fileID: 2595131888375915828, guid: fbd65534899bbfd4faec95d1de9b8ecb, type: 3}
   - {fileID: -2686287806754439443, guid: cdb8dc32fe358f747bcdd23def87c773, type: 3}
   _game: {fileID: 1370462690}
+  _tileSwapper:
+    _duration: 0.25
+    _maxDepthOffset: 0.5
   _dragThreshold: 0.5
 --- !u!4 &1370462689
 Transform:
@@ -2334,7 +2337,7 @@ MonoBehaviour:
   _size:
     x: 7
     y: 15
-  _tileTypeCount: 4
+  _tileTypeCount: 8
 --- !u!1 &1425683386
 GameObject:
   m_ObjectHideFlags: 0
