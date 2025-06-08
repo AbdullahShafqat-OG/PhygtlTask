@@ -2303,6 +2303,7 @@ MonoBehaviour:
   - {fileID: 2595131888375915828, guid: fbd65534899bbfd4faec95d1de9b8ecb, type: 3}
   - {fileID: -2686287806754439443, guid: cdb8dc32fe358f747bcdd23def87c773, type: 3}
   _game: {fileID: 1370462690}
+  _floatingScorePrefab: {fileID: 2164937779002808159, guid: 0a65641480d795f42b38277f7333354d, type: 3}
   _tileSwapper:
     _duration: 0.25
     _maxDepthOffset: 0.5
@@ -2339,7 +2340,7 @@ MonoBehaviour:
   _size:
     x: 7
     y: 15
-  _tileTypeCount: 8
+  _tileTypeCount: 4
 --- !u!1 &1425683386
 GameObject:
   m_ObjectHideFlags: 0

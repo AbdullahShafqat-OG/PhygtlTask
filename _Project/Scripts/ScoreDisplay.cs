@@ -25,6 +25,6 @@ public class ScoreDisplay : MonoBehaviour
     private void UpdateView(int score)
     {
         Debug.Log("Score broadcasted");
-        _scoreTxt.text = score.ToString();
+        _scoreTxt.SetText("{0}", score);
     }
 }

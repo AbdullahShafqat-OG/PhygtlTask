@@ -11,6 +11,8 @@ public class Match3Skin : MonoBehaviour
     private Tile[] _tilePrefabs;
     [SerializeField]
     private Match3Game _game;
+    [SerializeField]
+    private FloatingScore _floatingScorePrefab;
 
     [Header("Animation Params")]
     [SerializeField]
@@ -136,6 +138,18 @@ public class Match3Skin : MonoBehaviour
             int2 c = _game.ClearedTileCoordinates[i];
             _busyDuration = Mathf.Max(_tiles[c].Disappear(), _busyDuration);
             _tiles[c] = null;
+        }
+
+        for (int i = 0; i < _game.Scores.Count; i++)
+        {
+            SingleScore score = _game.Scores[i];
+            _floatingScorePrefab.Show(
+                new Vector3(
+                    score.position.x + _tileOffset.x,
+                    score.position.y + _tileOffset.y
+                ),
+                score.value
+            );
         }
     }
 
