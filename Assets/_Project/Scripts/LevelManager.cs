@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
 
     private void SetCurrentLevel(LevelData data)
     {
+        _currentLevel.LevelName = data.LevelName;
         _currentLevel.Size = data.Size;
         _currentLevel.TileTypeCount = data.TileTypeCount;
         _currentLevel.TargetScore = data.TargetScore;

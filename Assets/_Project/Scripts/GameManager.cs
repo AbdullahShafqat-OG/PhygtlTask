@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     private Vector3 _dragStart;
     private bool _isDragging;
 
-    private void Awake() => _match3.StartNewGame(_currentLevelData.Size, _currentLevelData.TileTypeCount, _currentLevelData.TargetScore);
+    private void Start() => StartNewGame();
 
     private void Update()
     {
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            _match3.StartNewGame(_currentLevelData.Size, _currentLevelData.TileTypeCount, _currentLevelData.TargetScore);
+            StartNewGame();
         }
     }
 
@@ -45,5 +45,11 @@ public class GameManager : MonoBehaviour
         {
             _isDragging = false;
         }
+    }
+
+    private void StartNewGame()
+    {
+        Messenger<string, int>.Broadcast(GameEvent.LEVEL_LOADED, _currentLevelData.LevelName, _currentLevelData.TargetScore);
+        _match3.StartNewGame(_currentLevelData.Size, _currentLevelData.TileTypeCount, _currentLevelData.TargetScore);
     }
 }

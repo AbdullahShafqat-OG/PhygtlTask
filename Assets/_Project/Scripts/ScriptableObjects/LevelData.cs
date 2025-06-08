@@ -12,8 +12,10 @@ public class LevelData : ScriptableObject
     public int TileTypeCount;
     public int TargetScore;
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         LevelName = name;
     }
+#endif
 }
