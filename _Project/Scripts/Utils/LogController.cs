@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class LogController : MonoBehaviour
 {
-    [SerializeField] private bool _showLogs = false;
+    [SerializeField] 
+    private bool _showLogs = false;
 
     private void Awake()
     {

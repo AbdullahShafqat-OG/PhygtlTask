@@ -11,8 +11,16 @@ public class Match3Skin : MonoBehaviour
     private Tile[] _tilePrefabs;
     [SerializeField]
     private Match3Game _game;
+
+    [Header("Animation Params")]
     [SerializeField]
     private TileSwapper _tileSwapper;
+    [SerializeField, Range(0.1f, 20f)]
+    private float _dropSpeed = 8f;
+    [SerializeField, Range(0f, 10f)]
+    private float _newDropOffset = 2f;
+
+    [Header("Touch Params")]
     [SerializeField, Range(0.1f, 1f)]
     private float _dragThreshold = 0.5f;
 
@@ -142,17 +150,20 @@ public class Match3Skin : MonoBehaviour
             if (drop.fromY < _tiles.SizeY)
             {
                 tile = _tiles[drop.coordinates.x, drop.fromY];
-                tile.transform.localPosition = new Vector3(
-                    drop.coordinates.x + _tileOffset.x, drop.coordinates.y + _tileOffset.y
-                );
+                //tile.transform.localPosition = new Vector3(
+                //    drop.coordinates.x + _tileOffset.x, drop.coordinates.y + _tileOffset.y
+                //);
             }
             else
             {
                 tile = SpawnTile(
-                    _game[drop.coordinates], drop.coordinates.x, drop.coordinates.y
+                    _game[drop.coordinates], drop.coordinates.x, drop.fromY + _newDropOffset
                 );
             }
             _tiles[drop.coordinates] = tile;
+            _busyDuration = Mathf.Max(
+                tile.Fall(drop.coordinates.y + _tileOffset.y, _dropSpeed), _busyDuration
+            );
         }
     }
 }
