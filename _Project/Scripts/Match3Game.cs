@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 
 public class Match3Game : MonoBehaviour
 {
+    public int TargetScore = 100;
+
     public List<int2> ClearedTileCoordinates
     { get; private set; }
     public List<TileDrop> DroppedTiles
@@ -88,6 +90,8 @@ public class Match3Game : MonoBehaviour
             Scores.Add(score);
             TotalScore += score.value;
             Messenger<int>.Broadcast(GameEvent.SCORE_UPDATED, TotalScore);
+            if (TotalScore > TargetScore)
+                Messenger<int>.Broadcast(GameEvent.LEVEL_COMPLETE, TotalScore);
         }
 
         _matches.Clear();
@@ -160,7 +164,7 @@ public class Match3Game : MonoBehaviour
                         }
                     }
                 }
-                TileState t = (TileState)Random.Range(1, _tileTypeCount + 1 - potentialMatchCount);
+                TileState t = (TileState)Random.Range(1, _tileTypeCount - potentialMatchCount);
                 if (potentialMatchCount > 0 && t >= a)
                 {
                     t += 1;
